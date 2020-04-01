@@ -18,5 +18,10 @@ precalc<-function(X, tot_var) {
 		{message("'tot_var' is smaller than variance of 3 PCs: reset to ", cum_var_3)
 		 tot_var=cum_var[3]}
 	nbcomp=which(cum_var>=tot_var)[1] # Taking nbcomp PCs will preserve at least tot_var of variance
-	return(list(X=X, nbcomp=nbcomp))
+	D <- diag(c(1/prx$sdev)) 
+	K <- D %*% t(prx$rotation)
+	K <- matrix(K[1:nbcomp,],nbcomp,ncol(X)) 
+	X=t(X)
+	Xd <- K %*% X 
+	return(list(X=X, K=K, Xd=Xd, nbcomp=nbcomp))
 }

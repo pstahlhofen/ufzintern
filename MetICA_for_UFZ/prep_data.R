@@ -12,3 +12,7 @@ peaks = peaks[apply(peaks>0, MARGIN=1, sum) > 1, ]
 #and having different values for at least 2 samples
 ranges = apply(peaks, MARGIN=1, range)
 peaks = peaks[ranges[1,] != ranges[2,], ]
+
+#Finally, the matrix needs to be transposed
+#in order to match the input format of the source generator
+peaks = t(peaks)

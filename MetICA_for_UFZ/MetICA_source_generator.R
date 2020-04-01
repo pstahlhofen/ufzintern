@@ -17,15 +17,13 @@ MetICA_source_generator<-function(X,tot_var,w.distribution,max_iter){
   A_sum=c() # Matrix storing the loading matrices
   ### Centering X and calculating the neccessary number of PCs (nbcomp) to keep at least tot_var variance
   precalc_res = precalc(X, tot_var)
-  X = precalc_res$X
-  nbcomp = precalc_res$nbcomp
-  print(nbcomp)
+  print(precalc_res$nbcomp)
 
   for (i in 1:max_iter){
     if (i>floor(max_iter/2)){type='deflation'} # Half as deflation, half as parallel
     print(paste0('Iteration:',i))
-    wines.ica <- fastICA2(X, nbcomp=nbcomp, w.distribution=w.distribution, alg.typ = type, 
-                          fun = "logcosh", alpha = 1, method='C', maxit = 300, tol = 1e-04)
+    wines.ica <- fastICA2(precalc_res$X, precalc_res$K, precalc_res$Xd, nbcomp=precalc_res$nbcomp, w.distribution=w.distribution, alg.typ = type, 
+                          fun = "logcosh", alpha = 1, maxit = 300, tol = 1e-04)
     W_dmix=t(wines.ica$K%*%wines.ica$W) # Calculation of demixing matrix W
     W_sum=rbind(W_sum,W_dmix) # Storage of demixing matrix
     A_sum=rbind(A_sum,wines.ica$A) # Storage of loading matrix
